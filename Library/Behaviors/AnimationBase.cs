@@ -9,6 +9,7 @@ namespace Behaviors
 		public static readonly BindableProperty EasingFunctionProperty = BindableProperty.Create(nameof(EasingFunction), typeof(EasingFunction), typeof(AnimationBase), EasingFunction.Linear);
 		public static readonly BindableProperty TargetObjectProperty = BindableProperty.Create(nameof(TargetObject), typeof(object), typeof(AnimationBase), null);
 		public static readonly BindableProperty AwaitProperty = BindableProperty.Create(nameof(Await), typeof(bool), typeof(AnimationBase), false);
+        public static readonly BindableProperty DelayProperty = BindableProperty.Create(nameof(Delay), typeof(int), typeof(AnimationBase), 0);
 
 		public int Duration
 		{
@@ -64,6 +65,12 @@ namespace Behaviors
 					return Easing.Linear;
 			}
 		}
+
+        public int Delay
+        {
+            get => (int)GetValue(DelayProperty);
+            set => SetValue(DelayProperty, value);
+        }
 	}
 }
 

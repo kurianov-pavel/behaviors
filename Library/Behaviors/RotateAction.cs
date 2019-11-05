@@ -46,6 +46,11 @@ namespace Behaviors
 				return false;
 			}
 
+            if (Delay > 0)
+            {
+                await Task.Delay(Delay);
+            }
+
 			switch (Axis)
 			{
 				case RotationAxis.X:

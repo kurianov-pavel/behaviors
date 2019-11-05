@@ -13,6 +13,13 @@ namespace Behaviors
 		public static readonly BindableProperty PropertyNameProperty = BindableProperty.Create(nameof(PropertyName), typeof(string), typeof(SetPropertyAction), null);
 		public static readonly BindableProperty TargetObjectProperty = BindableProperty.Create(nameof(TargetObject), typeof(object), typeof(SetPropertyAction), null);
 		public static readonly BindableProperty ValueProperty = BindableProperty.Create(nameof(Value), typeof(object), typeof(SetPropertyAction), null);
+        public static readonly BindableProperty DelayProperty = BindableProperty.Create(nameof(Delay), typeof(int), typeof(SetPropertyAction), 0);
+
+        public int Delay
+        {
+            get => (int)GetValue(DelayProperty);
+            set => SetValue(DelayProperty, value);
+        }
 
 		public string PropertyName
 		{
@@ -48,6 +55,11 @@ namespace Behaviors
 				return false;
 			}
 
+            if (Delay > 0)
+            {
+                await Task.Delay(Delay);
+            }
+
 			UpdatePropertyValue(targetObject);
 			return true;
 		}
@@ -75,7 +87,23 @@ namespace Behaviors
 				}
 				else {
 					string valueAsString = Value.ToString();
-					result = propertyTypeInfo.IsEnum ? Enum.Parse(propertyType, valueAsString, false) : TypeConverterHelper.Convert(valueAsString, propertyType.FullName);
+                    if (valueAsString.Contains("OnIdiom") && valueAsString.Contains("Double"))
+                    {
+                        var val = (OnIdiom<double>) Value;
+                        switch (Device.Idiom)
+                        {
+                            case TargetIdiom.Phone:
+                                result = val.Phone;
+                                break;
+                            case TargetIdiom.Tablet:
+                                result = val.Tablet;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        result = propertyTypeInfo.IsEnum ? Enum.Parse(propertyType, valueAsString, false) : TypeConverterHelper.Convert(valueAsString, propertyType.FullName);
+                    }
 				}
 				propertyInfo.SetValue(targetObject, result, new object[0]);
 			}

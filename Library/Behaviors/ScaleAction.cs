@@ -39,6 +39,11 @@ namespace Behaviors
 				return false;
 			}
 
+            if (Delay > 0)
+            {
+                await Task.Delay(Delay);
+            }
+
 			if (IsRelative)
 			{
 				if (Await)
